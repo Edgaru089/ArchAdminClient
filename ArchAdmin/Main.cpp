@@ -1,6 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define NOMINMAX
 
+#pragma warning(disable: 4018) //'expression' : signed/unsigned mismatch
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
 using namespace std;
