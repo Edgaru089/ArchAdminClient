@@ -8,7 +8,6 @@ using namespace sf;
 
 #include "ImGui/imgui-setup.h"
 #include "ArchAdminClient.hpp"
-#include "LogSystem.hpp"
 #include "Version.hpp"
 
 

@@ -9,7 +9,6 @@ using namespace std;
 using namespace sf;
 
 #include "ImGui/imgui-setup.h"
-#include "LogSystem.hpp"
 #include "Version.hpp"
 #include "ArchAdminClient.hpp"
 
@@ -19,10 +18,6 @@ String u8ToSfString(const char* u8string) { return String::fromUtf8(u8string, u8
 String u8ToSfString(const string& str) { return String::fromUtf8(str.begin(), str.end()); }
 
 int main(int argc, char* argv[]) {
-	ofstream logout("latest.log");
-	dlog.addOutputStream(clog);
-	dlog.addOutputStream(logout);
-
 	RenderWindow win;
 	win.create(VideoMode(800, 600),
 			   u8ToSfString("ArchUserServer Administrative Client " + stageString + versionString + " (Arch " + archVersionString + ")"),

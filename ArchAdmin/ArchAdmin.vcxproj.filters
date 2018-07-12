@@ -54,9 +54,6 @@
     <ClInclude Include="SHA-256.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="LogSystem.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="StringParser.hpp">
       <Filter>头文件</Filter>
     </ClInclude>

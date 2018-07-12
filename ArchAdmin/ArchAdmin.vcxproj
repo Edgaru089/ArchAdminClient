@@ -134,7 +134,6 @@
     <ClInclude Include="ImGui\stb_rect_pack.h" />
     <ClInclude Include="ImGui\stb_textedit.h" />
     <ClInclude Include="ImGui\stb_truetype.h" />
-    <ClInclude Include="LogSystem.hpp" />
     <ClCompile Include="Main.cpp" />
     <ClInclude Include="Version.hpp" />
     <ClInclude Include="Manager.hpp" />
