@@ -10,11 +10,13 @@ using namespace sf;
 
 #include "ImGui/imgui-setup.h"
 #include "LogSystem.hpp"
+#include "Version.hpp"
 #include "ArchAdminClient.hpp"
 
 #include "Manager.hpp"
 
 String u8ToSfString(const char* u8string) { return String::fromUtf8(u8string, u8string + strlen(u8string)); }
+String u8ToSfString(const string& str) { return String::fromUtf8(str.begin(), str.end()); }
 
 int main(int argc, char* argv[]) {
 	ofstream logout("latest.log");
@@ -23,7 +25,7 @@ int main(int argc, char* argv[]) {
 
 	RenderWindow win;
 	win.create(VideoMode(800, 600),
-			   u8ToSfString(u8"ArchUserServer Administrative Client ¦Á"),
+			   u8ToSfString("ArchUserServer Administrative Client " + stageString + versionString + " (Arch " + archVersionString + ")"),
 			   Style::Titlebar | Style::Resize | Style::Close);
 	win.clear(); win.display();
 	win.setVerticalSyncEnabled(true);

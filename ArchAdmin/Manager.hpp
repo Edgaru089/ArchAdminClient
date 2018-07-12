@@ -9,6 +9,7 @@ using namespace sf;
 #include "ImGui/imgui-setup.h"
 #include "ArchAdminClient.hpp"
 #include "LogSystem.hpp"
+#include "Version.hpp"
 
 
 namespace Manager {
@@ -182,6 +183,8 @@ namespace Manager {
 		if (imgui::BeginPopupModal("About", &showAboutWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
 			imgui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(20.0f, 20.0f));
 			imgui::Text("Administrative GUI Client for ArchUserServer");
+			imgui::Text("    Version %s %s (Arch %s), Compile Time: %s",
+						stageStringASCII.c_str(), versionString.c_str(), archVersionString.c_str(), compileTime.c_str());
 			imgui::Text(
 				R"(Copyright (C) 2018 Edgaru089
 Licensed under the MIT License)");

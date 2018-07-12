@@ -136,6 +136,7 @@
     <ClInclude Include="ImGui\stb_truetype.h" />
     <ClInclude Include="LogSystem.hpp" />
     <ClCompile Include="Main.cpp" />
+    <ClInclude Include="Version.hpp" />
     <ClInclude Include="Manager.hpp" />
     <ClInclude Include="SHA-256.hpp" />
     <ClInclude Include="StringParser.hpp" />
