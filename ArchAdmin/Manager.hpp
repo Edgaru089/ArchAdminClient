@@ -98,6 +98,8 @@ namespace Manager {
 
 	bool showDemoWindow = false;
 
+	bool showAboutWindow = false;
+
 	void runManageGui() {
 
 		//if (firstRun) {
@@ -111,69 +113,135 @@ namespace Manager {
 			reloadPending = false;
 		}
 
-		if (addingUser) {
-			imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5, 1.0));
+		if (addingUser)
 			imgui::OpenPopup("Add User");
-			if (imgui::BeginPopupModal("Add User", &addingUser, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
-				imgui::InputText("User Name", addUsername, sizeof(addUsername));
-				imgui::InputText("Password(Clear Text)", addUserPasswordCleartext, sizeof(addUserPasswordCleartext));
-				if (imgui::Button("Add")) {
-					client.addUser(addUsername, ArchAdminClient::getHashOfPassword(addUserPasswordCleartext));
-					addUsername[0] = '\0';
-					addUserPasswordCleartext[0] = '\0';
-					client.listUsers(users);
-				}
-				imgui::EndPopup();
+		imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5, 1.0));
+		if (imgui::BeginPopupModal("Add User", &addingUser, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
+			imgui::InputText("User Name", addUsername, sizeof(addUsername));
+			imgui::InputText("Password(Clear Text)", addUserPasswordCleartext, sizeof(addUserPasswordCleartext));
+			if (imgui::Button("Add")) {
+				client.addUser(addUsername, ArchAdminClient::getHashOfPassword(addUserPasswordCleartext));
+				addUsername[0] = '\0';
+				addUserPasswordCleartext[0] = '\0';
+				client.listUsers(users);
 			}
+			imgui::EndPopup();
 		}
 
-		if (changingUser) {
-			imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5, 1.0));
+		if (changingUser)
 			imgui::OpenPopup("Change User Password");
-			if (imgui::BeginPopupModal("Change User Password", &changingUser, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
-				imgui::InputText("User Name", const_cast<char*>(users[changeId].first.c_str()), users[changeId].first.size() + 1, ImGuiInputTextFlags_ReadOnly);
-				imgui::InputText("Password(Clear Text)", changePassClear, sizeof(changePassClear));
-				if (imgui::Button("Change")) {
-					client.changeUser(const_cast<char*>(users[changeId].first.c_str()), ArchAdminClient::getHashOfPassword(changePassClear));
-					changePassClear[0] = '\0';
-					client.listUsers(users);
-					changingUser = false;
-				}
-				imgui::EndPopup();
+		imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5, 1.0));
+		if (imgui::BeginPopupModal("Change User Password", &changingUser, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
+			imgui::InputText("User Name", const_cast<char*>(users[changeId].first.c_str()), users[changeId].first.size() + 1, ImGuiInputTextFlags_ReadOnly);
+			imgui::InputText("Password(Clear Text)", changePassClear, sizeof(changePassClear));
+			if (imgui::Button("Change")) {
+				client.changeUser(const_cast<char*>(users[changeId].first.c_str()), ArchAdminClient::getHashOfPassword(changePassClear));
+				changePassClear[0] = '\0';
+				client.listUsers(users);
+				changingUser = false;
 			}
+			imgui::EndPopup();
 		}
 
-		if (showSha256Window) {
-			imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5, 1.0));
+		if (showSha256Window)
 			imgui::OpenPopup("SHA-256 Hash");
-			if (imgui::BeginPopupModal("SHA-256 Hash", &showSha256Window, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
-				imgui::PushItemWidth(500);
-				if (imgui::InputText("Input", hashInput, sizeof(hashInput)))
-					strcpy(hashOutput, sha256(hashInput).c_str());
-				imgui::InputText("Output", hashOutput, sizeof(hashOutput), ImGuiInputTextFlags_ReadOnly);
-				imgui::PopItemWidth();
-				if (imgui::Button("Copy"))
-					imgui::SetClipboardText(hashOutput);
-				imgui::EndPopup();
-			}
+		imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5, 1.0));
+		if (imgui::BeginPopupModal("SHA-256 Hash", &showSha256Window, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
+			imgui::PushItemWidth(500);
+			if (imgui::InputText("Input", hashInput, sizeof(hashInput)))
+				strcpy(hashOutput, sha256(hashInput).c_str());
+			imgui::InputText("Output", hashOutput, sizeof(hashOutput), ImGuiInputTextFlags_ReadOnly);
+			imgui::PopItemWidth();
+			if (imgui::Button("Copy"))
+				imgui::SetClipboardText(hashOutput);
+			imgui::EndPopup();
 		}
 
-		//if (findWinOpen) {
-		//	imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5, 1.0));
-		//	imgui::OpenPopup("Find User");
-		//	if (imgui::BeginPopupModal("Find User", &findWinOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
+	//if (findWinOpen) {
+	//	imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5, 1.0));
+	//	imgui::OpenPopup("Find User");
+	//	if (imgui::BeginPopupModal("Find User", &findWinOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
 
-		//		imgui::EndPopup();
-		//	}
-		//}
+	//		imgui::EndPopup();
+	//	}
+	//}
 
-		if (showNotFoundWindow) {
-			imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5, 1.0));
+		if (showNotFoundWindow)
 			imgui::OpenPopup("Not Found");
-			if (imgui::BeginPopupModal("The string was not found in the remaining usernames.", &showNotFoundWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
+		imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5f, 1.0f));
+		imgui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20, 20));
+		if (imgui::BeginPopupModal("Not Found", &showNotFoundWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
+			imgui::TextUnformatted("The string was not found in the usernames.");
+			imgui::EndPopup();
+		}
+		imgui::PopStyleVar();
 
-				imgui::EndPopup();
+		if (showAboutWindow)
+			imgui::OpenPopup("About");
+		imgui::SetNextWindowPos(imgui::GetIO().DisplaySize / 2, ImGuiCond_Always, ImVec2(0.5f, 0.6f));
+		if (imgui::BeginPopupModal("About", &showAboutWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings)) {
+			imgui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(20.0f, 20.0f));
+			imgui::Text("Administrative GUI Client for ArchUserServer");
+			imgui::Text(
+				R"(Copyright (C) 2018 Edgaru089
+Licensed under the MIT License)");
+			imgui::Text(
+				R"(SFML - Copyright (C) 2007-2018 Laurent Gomila and contributors
+ under the Zlib/Png License
+External libraries used by SFML
+	OpenAL-Soft is under the LGPL license
+	stb_image and stb_image_write are public domain
+	freetype is under the FreeType license or the GPL license
+	libogg is under the BSD license
+	libvorbis is under the BSD license
+	libflac is under the BSD license)");
+			imgui::Text(
+				R"(Dear ImGui - Copyright (c) 2014-2018 Omar Cornut and contributors
+ under the MIT License)");
+			imgui::Text(
+				R"(imgui-sfml - Copyright (c) 2016 Elias Daler
+                Copyright (c) 2014-2016 Omar Cornut and ImGui contributors
+                Copyright (c) 2014 Mischa Aster Alff
+ under the MIT License)");
+			imgui::Text(
+				R"(sha256 - FIPS 180-2 SHA-224/256/384/512 implementation (Issue date: 04/30/2005)
+            Copyright (C) 2005, 2007 Olivier Gay <olivier.gay@a3.epfl.ch>
+            Updated to C++ by zedwood.com, 2012
+ under a modified BSD License - Below)");
+			imgui::PopStyleVar();
+
+			if (imgui::TreeNode("Modified BSD License")) {
+				imgui::Text(
+					R"(Copyright (C) 2005, 2007 Olivier Gay <olivier.gay@a3.epfl.ch>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. Neither the name of the project nor the names of its contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.)");
+				imgui::TreePop();
 			}
+
+			imgui::EndPopup();
 		}
 
 		imgui::SetNextWindowSize(imgui::GetIO().DisplaySize + ImVec2(2, 2), ImGuiCond_Always);
@@ -208,7 +276,10 @@ namespace Manager {
 					hashOutput[0] = '\0';
 					showSha256Window = true;
 				}
-				imgui::MenuItem("Show Demo Window", nullptr, &showDemoWindow);
+				imgui::MenuItem("Show Demo Window         ", nullptr, &showDemoWindow);
+				if (imgui::MenuItem("About...                 ")) {
+					showAboutWindow = true;
+				}
 				imgui::EndMenu();
 			}
 
@@ -226,41 +297,34 @@ namespace Manager {
 		imgui::InputText("##FindContent", findContent, sizeof(findContent));
 		imgui::PopItemWidth();
 		imgui::SameLine();
-		if (newFound)
-			newFound = false;
-		if (imgui::IsMouseClicked(1))
-			curFindId = -1;
 		if (imgui::Button("Find Next")) {
 			string buf = findContent;
 			if (findCaseInsensitive)
-				for (int i = 0; buf[i] != '\0'; i++)
+				for (int i = 0; i < buf.size(); i++)
 					buf[i] = toupper(buf[i]);
-			int cur0, begin = curFindId + 1;
-			for (cur0 = begin; cur0 = (cur0 + 1) % users.size(); cur0 != curFindId && cur0 != begin) {
-				string usern = users[cur0].first;
+			int cur0;
+			for (cur0 = 1; cur0 < users.size() + 1; cur0++) {
+				int i = (cur0 + curFindId) % users.size();
+				string usern = users[i].first;
 				if (findCaseInsensitive)
-					for (int i = 0; usern[i] != '\0'; i++)
+					for (int i = 0; i < usern.size(); i++)
 						usern[i] = toupper(usern[i]);
 				if (usern.find(buf) != string::npos)
 					break;
 			}
-			if (cur0 != curFindId)
+			if (cur0 == users.size() + 1)
 				showNotFoundWindow = true;
-			else {
-				cur0 = curFindId;
-				newFound = true;
-			}
+			else
+				curFindId = (cur0 + curFindId) % users.size();
 		}
 		imgui::SameLine();
-		if (imgui::Selectable("Case Insensitive", &findCaseInsensitive));
-		imgui::SameLine();
-		imgui::Text("CurFindId: %d", curFindId);
+		imgui::Selectable("Case Insensitive", &findCaseInsensitive, 0);
 
 		imgui::Separator();
 
 		imgui::Text("User Count: %d", users.size());
 
-		imgui::BeginChild("##ManageUsersChild", ImVec2(0, 0), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+		imgui::BeginChild("##ManageUsersChild");
 
 		rowBoundingRects.resize(users.size());
 		imgui::BeginColumns("##UsersColumns", 3);
@@ -276,7 +340,7 @@ namespace Manager {
 		//}
 
 		//imgui::NextColumn();
-		imgui::Text("UserName");
+		imgui::Text("User Name");
 		for (int i = 0; i < users.size(); i++) {
 			imgui::TextUnformatted(users[i].first.c_str());
 
@@ -285,7 +349,7 @@ namespace Manager {
 			rowBoundingRects[i].top = leftTop.y - imgui::GetStyle().ItemSpacing.y / 2;
 
 			if (newFound && i == curFindId)
-				imgui::SetScrollHere(0.3);
+				imgui::SetScrollHere();
 		}
 
 		imgui::NextColumn();
@@ -310,8 +374,8 @@ namespace Manager {
 
 		imgui::EndColumns();
 
-		//if (imgui::IsMouseHoveringWindow && imgui::IsMouseClicked(1))
-		//	curFindId = -1;
+		if (imgui::IsWindowHovered(ImGuiHoveredFlags_Default) && imgui::IsMouseClicked(0))
+			curFindId = -1;
 
 		imgui::EndChild();
 
@@ -327,20 +391,20 @@ namespace Manager {
 					imgui::OpenPopup("itemContextMenu");
 				}
 			}
-			if (newFound && i == curFindId) {
+			if (!rectAdded && i == curFindId) {
 				imgui::GetWindowDrawList()->AddRect(ImVec2(j.left, j.top), ImVec2(j.left + j.width, j.top + j.height),
 													imgui::ColorConvertFloat4ToU32(imgui::GetStyleColorVec4(ImGuiCol_Border)));
 				rectAdded = true;
 			}
 			if (imgui::BeginPopup("itemContextMenu")) {
-				if (imgui::Selectable("Copy Username"))
+				if (imgui::Selectable("Copy Username                      "))
 					imgui::SetClipboardText(users[i].first.c_str());
-				if (imgui::Selectable("Copy Hashed Password"))
+				if (imgui::Selectable("Copy Hashed Password               "))
 					imgui::SetClipboardText(users[i].second.first.c_str());
 				if (users[i].second.second == "")
-					imgui::Selectable("Copy User Session", false, ImGuiSelectableFlags_Disabled);
+					imgui::Selectable("Copy User Session                  ", false, ImGuiSelectableFlags_Disabled);
 				else
-					if (imgui::Selectable("Copy User Session"))
+					if (imgui::Selectable("Copy User Session                  "))
 						imgui::SetClipboardText(users[i].second.second.c_str());
 				imgui::Separator();
 				if (imgui::Selectable("Change Password...                 ")) {
@@ -356,7 +420,7 @@ namespace Manager {
 					client.removeSession(users[i].first);
 					users[i].second.second = "";
 				}
-				if (imgui::Selectable("Acquire Session if Not Present     "))
+				if (imgui::Selectable("Acquire New Session                "))
 					client.acquireSession(users[i].first, users[i].second.second);
 				imgui::EndPopup();
 			}

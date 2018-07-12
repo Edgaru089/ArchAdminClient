@@ -14,13 +14,17 @@ using namespace sf;
 
 #include "Manager.hpp"
 
+String u8ToSfString(const char* u8string) { return String::fromUtf8(u8string, u8string + strlen(u8string)); }
+
 int main(int argc, char* argv[]) {
 	ofstream logout("latest.log");
 	dlog.addOutputStream(clog);
 	dlog.addOutputStream(logout);
 
 	RenderWindow win;
-	win.create(VideoMode(800, 600), "ArchUserServer Administrative Client");
+	win.create(VideoMode(800, 600),
+			   u8ToSfString(u8"ArchUserServer Administrative Client ¦Á"),
+			   Style::Titlebar | Style::Resize | Style::Close);
 	win.clear(); win.display();
 	win.setVerticalSyncEnabled(true);
 	win.resetGLStates();
@@ -32,6 +36,7 @@ int main(int argc, char* argv[]) {
 	style.FrameBorderSize = 1.0f;
 	style.ScrollbarRounding = 0.0f;
 	style.WindowRounding = 0.0f;
+	style.ChildBorderSize = 0.0f;
 
 	Clock deltaClock;
 	while (win.isOpen()) {

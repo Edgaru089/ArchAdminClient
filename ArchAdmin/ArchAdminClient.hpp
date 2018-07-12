@@ -31,8 +31,7 @@ public:
 		}
 
 		string result;
-		pack >> result;
-		if (result != "ADMINOK") {
+		if (!(pack >> result) || result != "ADMINOK") {
 			socket.disconnect();
 			return false;
 		}
