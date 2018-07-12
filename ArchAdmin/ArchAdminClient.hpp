@@ -3,6 +3,7 @@
 #include <string>
 #include <SFML/Network.hpp>
 #include "SHA-256.hpp"
+#include "Uuid.hpp"
 using namespace std;
 using namespace sf;
 
@@ -56,15 +57,16 @@ Packet packetName; packetName << command;
 #define CHECKED_SEND_COMMAND(command)\
 {PACKET_COMMAND(pack, command); CHECKED_SEND(pack); }
 
-	// Username, <Password, SessionOr""Empty>
-	bool listUsers(vector<pair<string, pair<string, string>>>& vec) {
+	// Username, <Password, SessionOrNil>
+	bool listUsers(vector<pair<string, pair<string, Uuid>>>& vec) {
 		CHECKED_SEND_COMMAND("A_LISTUSERS");
 		CHECKED_RECEIVE(ret);
 		string reply;
 		ret >> reply;
 		if (reply == "A_USERS") {
 			int cnt;
-			string name, pass, sess;
+			string name, pass;
+			Uuid sess;
 			ret >> cnt;
 			vec.clear(); vec.reserve(cnt);
 			for (int i = 1; i <= cnt; i++) {
@@ -129,7 +131,7 @@ Packet packetName; packetName << command;
 			return false;
 	}
 
-	bool acquireSession(string name, string& session) {
+	bool acquireSession(string name, Uuid& session) {
 		PACKET_COMMAND(pack, "A_ADDSESS");
 		pack << name;
 		CHECKED_SEND(pack);

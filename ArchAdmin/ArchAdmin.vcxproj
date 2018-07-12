@@ -135,6 +135,7 @@
     <ClInclude Include="ImGui\stb_textedit.h" />
     <ClInclude Include="ImGui\stb_truetype.h" />
     <ClCompile Include="Main.cpp" />
+    <ClInclude Include="Uuid.hpp" />
     <ClInclude Include="Version.hpp" />
     <ClInclude Include="Manager.hpp" />
     <ClInclude Include="SHA-256.hpp" />

@@ -72,7 +72,7 @@ namespace Manager {
 	}
 
 
-	vector<pair<string, pair<string, string>>> users;
+	vector<pair<string, pair<string, Uuid>>> users;
 	bool reloadPending = true;
 
 	//bool firstRun = true;
@@ -321,6 +321,14 @@ SUCH DAMAGE.)");
 		}
 		imgui::SameLine();
 		imgui::Selectable("Case Insensitive", &findCaseInsensitive, 0);
+		imgui::SameLine();
+		imgui::VerticalSeparator();
+		imgui::SameLine();
+		if (imgui::Button("Add User...##TopToolbar")) {
+			addUsername[0] = '\0';
+			addUserPasswordCleartext[0] = '\0';
+			addingUser = true;
+		}
 
 		imgui::Separator();
 
@@ -343,6 +351,9 @@ SUCH DAMAGE.)");
 
 		//imgui::NextColumn();
 		imgui::Text("User Name");
+		imgui::Dummy(ImVec2(0.0, 0.0));
+		float seperateLineL = imgui::GetItemRectMin().x - imgui::GetStyle().ItemSpacing.x;
+		float seperateLineY = imgui::GetItemRectMin().y;
 		for (int i = 0; i < users.size(); i++) {
 			imgui::TextUnformatted(users[i].first.c_str());
 
@@ -356,15 +367,18 @@ SUCH DAMAGE.)");
 
 		imgui::NextColumn();
 		imgui::Text("Hashed Password");
+		imgui::Dummy(ImVec2(0.0, 0.0));
 		for (int i = 0; i < users.size(); i++) {
 			imgui::TextUnformatted(users[i].second.first.c_str());
 		}
 
 		imgui::NextColumn();
 		imgui::Text("Session");
+		imgui::Dummy(ImVec2(0.0, 0.0));
+		float seperateLineR = imgui::GetItemRectMin().x + imgui::GetColumnWidth();
 		for (int i = 0; i < users.size(); i++) {
-			if (users[i].second.second != "")
-				imgui::TextUnformatted(users[i].second.second.c_str());
+			if (users[i].second.second != Uuid::nil())
+				imgui::Text("{%s}", users[i].second.second.toString().c_str());
 			else
 				imgui::TextUnformatted("N/A");
 
@@ -378,6 +392,9 @@ SUCH DAMAGE.)");
 
 		if (imgui::IsWindowHovered(ImGuiHoveredFlags_Default) && imgui::IsMouseClicked(0))
 			curFindId = -1;
+
+		imgui::GetWindowDrawList()->AddLine(ImVec2(seperateLineL, seperateLineY), ImVec2(seperateLineR, seperateLineY),
+											imgui::ColorConvertFloat4ToU32(imgui::GetStyleColorVec4(ImGuiCol_Separator)));
 
 		imgui::EndChild();
 
@@ -403,11 +420,11 @@ SUCH DAMAGE.)");
 					imgui::SetClipboardText(users[i].first.c_str());
 				if (imgui::Selectable("Copy Hashed Password               "))
 					imgui::SetClipboardText(users[i].second.first.c_str());
-				if (users[i].second.second == "")
+				if (users[i].second.second == Uuid::nil())
 					imgui::Selectable("Copy User Session                  ", false, ImGuiSelectableFlags_Disabled);
 				else
 					if (imgui::Selectable("Copy User Session                  "))
-						imgui::SetClipboardText(users[i].second.second.c_str());
+						imgui::SetClipboardText(users[i].second.second.toString().c_str());
 				imgui::Separator();
 				if (imgui::Selectable("Change Password...                 ")) {
 					changingUser = true;
@@ -420,7 +437,7 @@ SUCH DAMAGE.)");
 				imgui::Separator();
 				if (imgui::Selectable("Clear Session                      ")) {
 					client.removeSession(users[i].first);
-					users[i].second.second = "";
+					users[i].second.second = Uuid::nil();
 				}
 				if (imgui::Selectable("Acquire New Session                "))
 					client.acquireSession(users[i].first, users[i].second.second);

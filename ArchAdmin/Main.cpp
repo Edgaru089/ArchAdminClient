@@ -19,7 +19,7 @@ String u8ToSfString(const string& str) { return String::fromUtf8(str.begin(), st
 
 int main(int argc, char* argv[]) {
 	RenderWindow win;
-	win.create(VideoMode(800, 600),
+	win.create(VideoMode(960, 640),
 			   u8ToSfString("ArchUserServer Administrative Client " + stageString + versionString + " (Arch " + archVersionString + ")"),
 			   Style::Titlebar | Style::Resize | Style::Close);
 	win.clear(); win.display();
